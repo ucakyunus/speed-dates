@@ -4,10 +4,16 @@ import { useWindowDimensions } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 import { Avatar } from "@/components/matches/avatar";
-import { telegramData } from "@/constants/telegram-data";
 
 type MessageListItemProps = {
-  item: (typeof telegramData)[0];
+  item: {
+    name: string;
+    avatar: string;
+    hasStories: boolean;
+    bg: string;
+    date: Date;
+    message: string;
+  };
 };
 
 export function MessageListItem({ item }: MessageListItemProps) {
