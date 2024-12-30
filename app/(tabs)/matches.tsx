@@ -1,4 +1,4 @@
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { StyleSheet } from "react-native";
 
@@ -12,7 +12,7 @@ type MatchedItem = {
   age: number;
   bio: string;
   distance: number;
-  image: string;
+  images: string[];
   matched: boolean;
 };
 
@@ -32,11 +32,9 @@ export default function MatchesScreen() {
   const transformedData = matchedItems.map((item) => ({
     key: item.id,
     name: item.name,
-    avatar: item.image,
+    images: item.images,
     date: new Date(),
     message: item.bio,
-    hasStories: true,
-    bg: "#000000",
   }));
 
   return (

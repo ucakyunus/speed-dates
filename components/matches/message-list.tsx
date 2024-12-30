@@ -1,12 +1,10 @@
 import { MessageListItem } from "@/components/matches/message-list-item";
-
 import { FlatList } from "react-native";
 
 type Message = {
+  key: string;
   name: string;
-  avatar: string;
-  hasStories: boolean;
-  bg: string;
+  images: string[];
   date: Date;
   message: string;
 };

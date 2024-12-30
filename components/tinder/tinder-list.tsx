@@ -1,6 +1,6 @@
 import { Image as ExpoImage } from "expo-image";
-import LottieView from "lottie-react-native";
-import { useRef, useState } from "react";
+// import LottieView from "lottie-react-native";
+import { useState } from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
@@ -10,10 +10,11 @@ import { tinderData } from "@/constants/tinder-data";
 
 export function TinderList() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const confettiRef = useRef<LottieView>(null);
+  // const confettiRef = useRef<LottieView>(null);
 
   const handleMatch = () => {
-    confettiRef.current?.play();
+    // confettiRef.current?.play();
+    console.log("match");
   };
 
   return (
@@ -33,18 +34,18 @@ export function TinderList() {
       >
         <ExpoImage
           style={{ flex: 1, opacity: 0.4 }}
-          source={{ uri: tinderData[currentIndex]?.image }}
+          source={{ uri: tinderData[currentIndex]?.images[0] }}
           blurRadius={70}
         />
       </Animated.View>
 
-      <LottieView
+      {/* <LottieView
         ref={confettiRef}
-        source={require("@/assets/lottie/confetti.json")}
+        source={require("@/assets/lottie/confetti2.json")}
         style={StyleSheet.absoluteFill}
         autoPlay={false}
         loop={false}
-      />
+      /> */}
 
       <ViceTinder
         data={tinderData}
@@ -76,7 +77,7 @@ export function TinderList() {
           >
             <ExpoImage
               source={{
-                uri: item.image,
+                uri: item.images[0],
               }}
               style={{
                 flex: 1,

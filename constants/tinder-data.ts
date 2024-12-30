@@ -20,6 +20,9 @@ export const images = [
 
 export const tinderData = Array.from({ length: dataLength }).map((_, index) => {
   const id = faker.string.uuid();
+  const imageCount = faker.number.int({ min: 2, max: 4 });
+  const profileImages = faker.helpers.arrayElements(images, imageCount);
+
   return {
     id,
     key: id,
@@ -27,7 +30,7 @@ export const tinderData = Array.from({ length: dataLength }).map((_, index) => {
     age: faker.number.int({ min: 18, max: 35 }),
     bio: faker.lorem.sentences(2),
     distance: faker.number.int({ min: 1, max: 20 }),
-    image: images[faker.number.int({ min: 0, max: images.length - 1 })],
+    images: profileImages,
     matched: matchedProfiles.includes(index),
   };
 });

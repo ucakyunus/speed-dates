@@ -746,7 +746,7 @@
     "@babel/plugin-transform-react-jsx-development" "^7.25.9"
     "@babel/plugin-transform-react-pure-annotations" "^7.25.9"
 
-"@babel/preset-typescript@^7.13.0", "@babel/preset-typescript@^7.16.7", "@babel/preset-typescript@^7.23.0":
+"@babel/preset-typescript@^7.13.0", "@babel/preset-typescript@^7.16.7", "@babel/preset-typescript@^7.17.12", "@babel/preset-typescript@^7.23.0":
   version "7.26.0"
   resolved "https://registry.yarnpkg.com/@babel/preset-typescript/-/preset-typescript-7.26.0.tgz#4a570f1b8d104a242d923957ffa1eaff142a106d"
   integrity sha512-NMk1IGZ5I/oHhoXEElcm+xUnL/szL6xflkFZmoEU9xj1qSJXpiS7rsspYo92B4DRCDvZn2erT5LdsCeXAKNCkg==
@@ -6313,6 +6313,13 @@ react-native-screens@~4.1.0:
   dependencies:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
+
+react-native-swipeable-item@^2.0.9:
+  version "2.0.9"
+  resolved "https://registry.yarnpkg.com/react-native-swipeable-item/-/react-native-swipeable-item-2.0.9.tgz#694a3f10333b47ba7f0e57d916fa39407b76a6d6"
+  integrity sha512-NUBX5Xs8cYCU7lWj5O/NtY7kq8I9dIo3eQVtnSbfYU39RXi/n0TpRqpmaQTPM6sE5EQR/BcygD4jwDcrE5h/sQ==
+  dependencies:
+    "@babel/preset-typescript" "^7.17.12"
 
 react-native-toast-message@^2.2.1:
   version "2.2.1"

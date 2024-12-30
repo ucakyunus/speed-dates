@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
@@ -52,6 +53,7 @@ export default function RootLayout() {
 function RootLayoutNav() {
   const router = useRouter();
   const [isOnboarded, setIsOnboarded] = useState<boolean | null>(null);
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     // Check the current onboarding state at the start
@@ -88,18 +90,28 @@ function RootLayoutNav() {
   }, [isOnboarded, router]);
 
   return (
-    <GestureHandlerRootView>
-      <Toast />
+    <>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <ThemeProvider value={DarkTheme}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="modal"
+              options={{ presentation: "modal", headerShown: false }}
+            />
+            <Stack.Screen
+              name="chat-detail"
+              options={{
+                presentation: "modal",
+                headerShown: false,
+                animation: "slide_from_bottom",
+              }}
+            />
+          </Stack>
+        </ThemeProvider>
+      </GestureHandlerRootView>
 
-      <ThemeProvider value={DarkTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="modal"
-            options={{ presentation: "modal", headerShown: false }}
-          />
-        </Stack>
-      </ThemeProvider>
-    </GestureHandlerRootView>
+      <Toast visibilityTime={2000} position="top" topOffset={insets.top + 10} />
+    </>
   );
 }
