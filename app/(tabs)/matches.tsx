@@ -21,6 +21,7 @@ export default function MatchesScreen() {
 
   useFocusEffect(
     useCallback(() => {
+      // clearMatchedItems();
       // Get matched items when screen comes into focus
       const items = getMatchedItems();
       setMatchedItems(items);

@@ -1,6 +1,5 @@
 import { PropsWithChildren } from "react";
 import { Dimensions } from "react-native";
-
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   interpolate,
@@ -11,6 +10,7 @@ import Animated, {
   withDecay,
   withSpring,
 } from "react-native-reanimated";
+import Toast from "react-native-toast-message";
 
 import { tinderData } from "@/constants/tinder-data";
 import { saveMatchedItem } from "@/lib/mmkvStorage";
@@ -29,6 +29,7 @@ type TinderItemProps = PropsWithChildren<{
   activeIndex: SharedValue<number>;
   index: number;
   panEnabled: boolean;
+  onMatch?: () => void;
 }>;
 
 export function TinderItem({
@@ -36,9 +37,24 @@ export function TinderItem({
   index,
   panEnabled,
   children,
+  onMatch,
 }: TinderItemProps) {
   const x = useSharedValue(0);
   const y = useSharedValue(0);
+
+  const handleMatch = () => {
+    saveMatchedItem(tinderData[index]);
+    Toast.show({
+      type: "success",
+      text1: "Yeni bir eşleşme!",
+      text2: "Tebrikler! Yeni bir eşleşme yakaladınız.",
+      position: "top",
+      visibilityTime: 3000,
+    });
+    if (onMatch) {
+      onMatch();
+    }
+  };
 
   const pan = Gesture.Pan()
     .enabled(panEnabled)
@@ -57,9 +73,9 @@ export function TinderItem({
           velocity: e.velocityY,
         });
 
-        // If swiped right and item is matched, save to storage
+        // If swiped right and item is matched, save to storage and show toast
         if (isSwipedRight && tinderData[index]?.matched) {
-          runOnJS(saveMatchedItem)(tinderData[index]);
+          runOnJS(handleMatch)();
         }
 
         activeIndex.value = withSpring(activeIndex.value + 1, {

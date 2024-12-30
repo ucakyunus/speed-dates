@@ -33,7 +33,12 @@ const getMatchedItems = () => {
   return JSON.parse(storage.getString(MATCHED_ITEMS_KEY) || "[]");
 };
 
+const clearMatchedItems = () => {
+  storage.delete(MATCHED_ITEMS_KEY);
+};
+
 export {
+  clearMatchedItems,
   getMatchedItems,
   getOnboardingState,
   MATCHED_ITEMS_KEY,

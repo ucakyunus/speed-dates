@@ -1,6 +1,6 @@
 import { Image as ExpoImage } from "expo-image";
-import { useRouter } from "expo-router";
-import { useState } from "react";
+import LottieView from "lottie-react-native";
+import { useRef, useState } from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
@@ -9,8 +9,12 @@ import { ViceTinder } from "@/components/tinder/vice-tinder";
 import { tinderData } from "@/constants/tinder-data";
 
 export function TinderList() {
-  const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const confettiRef = useRef<LottieView>(null);
+
+  const handleMatch = () => {
+    confettiRef.current?.play();
+  };
 
   return (
     <SafeAreaView
@@ -33,6 +37,15 @@ export function TinderList() {
           blurRadius={70}
         />
       </Animated.View>
+
+      <LottieView
+        ref={confettiRef}
+        source={require("@/assets/lottie/confetti.json")}
+        style={StyleSheet.absoluteFill}
+        autoPlay={false}
+        loop={false}
+      />
+
       <ViceTinder
         data={tinderData}
         style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
@@ -42,11 +55,14 @@ export function TinderList() {
         onChange={(index) => {
           setCurrentIndex(index);
         }}
+        onMatch={handleMatch}
         renderItem={({ item, index }) => (
           <View
             style={{
               width: 200,
               aspectRatio: 1 / 1.66,
+              overflow: "hidden",
+              borderRadius: 12,
               // Shadow
               shadowColor: "#000",
               shadowOffset: {
@@ -64,7 +80,6 @@ export function TinderList() {
               }}
               style={{
                 flex: 1,
-                borderRadius: 12,
                 borderWidth: 2,
                 borderColor: "rgba(0,0,0,0.1)",
               }}

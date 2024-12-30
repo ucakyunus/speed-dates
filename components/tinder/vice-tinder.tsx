@@ -20,6 +20,7 @@ type ViceTinderProps<T> = {
   renderItem: ({ item, index }: { item: T; index: number }) => React.ReactNode;
   onEndReached?: () => void;
   onChange?: (index: number) => void;
+  onMatch?: () => void;
   style?: ViewStyle;
   initialItem?: number;
 };
@@ -29,6 +30,7 @@ export function ViceTinder<T>({
   onEndReached,
   renderItem,
   onChange,
+  onMatch,
   style,
   initialItem = 0,
 }: ViceTinderProps<T & { key: string }>) {
@@ -68,6 +70,7 @@ export function ViceTinder<T>({
             activeIndex={activeIndex}
             index={index + activeIndexState}
             panEnabled={activeIndexState === index + activeIndexState}
+            onMatch={onMatch}
           >
             {renderItem({ item, index: index + activeIndexState })}
           </TinderItem>
