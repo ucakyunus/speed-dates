@@ -39,7 +39,7 @@ const clearMatchedItems = () => {
 
 export function removeMatchedItem(id: string) {
   const items = getMatchedItems();
-  const filteredItems = items.filter((item) => item.id !== id);
+  const filteredItems = items.filter((item: { id: string; }) => item.id !== id);
   storage.set(MATCHED_ITEMS_KEY, JSON.stringify(filteredItems));
 }
 
