@@ -1,164 +1,283 @@
-import { Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { Key, useEffect, useRef, useState } from "react";
+/*
+    Inspiration: https://dribbble.com/shots/5694244-Scroll-and-Selected-Tab
+    VR Image: https://www.klipartz.com/en/sticker-png-lekuz
+*/
+import ChatList from "@/components/chat/chat-list";
+import { Feather } from "@expo/vector-icons";
+import { faker } from "@faker-js/faker";
+import { useNavigation } from "expo-router";
 import {
-  FlatList,
+  Dimensions,
   Image,
   StyleSheet,
+  Text,
   TouchableOpacity,
-  useWindowDimensions,
-  ViewToken,
+  View,
 } from "react-native";
 import Animated, {
-  FadeIn,
+  Extrapolation,
+  interpolate,
+  interpolateColor,
+  useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
 } from "react-native-reanimated";
 
-import { Text, View } from "@/components/Themed";
+faker.seed(10);
+const { width, height } = Dimensions.get("screen");
 
-export default function ChatDetailScreen() {
-  const { width } = useWindowDimensions();
-  const { images: imagesParam, name } = useLocalSearchParams<{
-    images: string;
-    name: string;
-  }>();
-  const images = JSON.parse(imagesParam);
-  const imageHeight = useSharedValue(250);
-  const router = useRouter();
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const flatListRef = useRef<FlatList>(null);
+const colors = {
+  header: "#1C1C1C",
+  headerText: "#FF6347",
+  tab: "#2A2A2A",
+  tabText: "#FF6347",
+  text: "#E0E0E0",
+};
 
-  const imageStyle = useAnimatedStyle(() => {
+const _headerHeight = height * 0.4;
+const _headerHeightShrink = _headerHeight / 2;
+const _tabsHeight = height * 0.2;
+const _tabsHeightShrink = _tabsHeight / 2;
+
+const inputRange = [0, _headerHeightShrink + _tabsHeightShrink];
+const Header = ({ scrollY }) => {
+  const navigation = useNavigation();
+  const stylez = useAnimatedStyle(() => {
     return {
-      height: imageHeight.value,
+      height: interpolate(
+        scrollY.value,
+        inputRange,
+        [_headerHeight, _headerHeightShrink],
+        Extrapolation.CLAMP,
+      ),
+    };
+  });
+  const headerTextStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        scrollY.value,
+        inputRange,
+        [1, 0],
+        Extrapolation.CLAMP,
+      ),
+      transform: [
+        {
+          translateY: interpolate(
+            scrollY.value,
+            inputRange,
+            [0, -_headerHeight],
+            Extrapolation.CLAMP,
+          ),
+        },
+      ],
     };
   });
 
-  useEffect(() => {
-    imageHeight.value = withSpring(250, {
-      damping: 20,
-      stiffness: 90,
-    });
-  }, []);
-
-  const onViewableItemsChanged = useRef(
-    ({ viewableItems }: { viewableItems: ViewToken[] }) => {
-      if (viewableItems.length > 0) {
-        setActiveImageIndex(viewableItems[0].index ?? 0);
-      }
-    },
-  ).current;
-
   return (
-    <View style={styles.container}>
-      <Animated.View entering={FadeIn.duration(300)}>
-        <Animated.View style={[{ width }, imageStyle]}>
-          <FlatList
-            ref={flatListRef}
-            data={images}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            onViewableItemsChanged={onViewableItemsChanged}
-            viewabilityConfig={{
-              itemVisiblePercentThreshold: 50,
-            }}
-            renderItem={({ item: image }) => (
-              <Image
-                source={{ uri: image }}
-                style={[{ width }, imageStyle]}
-                resizeMode="cover"
+    <Animated.View
+      style={[
+        {
+          backgroundColor: colors.header,
+          justifyContent: "center",
+          // padding: 20,
+        },
+        stylez,
+      ]}
+    >
+      <Animated.View style={headerTextStyle}>
+        <Image
+          source={{
+            uri: "https://static.vecteezy.com/system/resources/previews/035/819/192/large_2x/ai-generated-young-lady-in-bright-red-dress-on-the-background-of-a-picture-free-photo.jpg",
+          }}
+          style={{
+            width: width,
+            height: width,
+            resizeMode: "cover",
+            alignSelf: "center",
+          }}
+        />
+      </Animated.View>
+      <TouchableOpacity
+        onPress={() => {
+          // Assuming you have access to a navigation object
+          navigation.goBack();
+        }}
+      >
+        <View
+          style={{
+            height: _headerHeightShrink / 4,
+            justifyContent: "center",
+            position: "absolute",
+            top: _headerHeightShrink / 2 - _headerHeightShrink / 8,
+            width: 80,
+            alignItems: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.5)", // Add background
+            borderRadius: 10, // Add rounded borders
+            shadowColor: "#000", // Add shadow effects
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5, // For Android shadow
+          }}
+        >
+          <Feather name="chevron-left" size={32} color="white" />
+        </View>
+      </TouchableOpacity>
+    </Animated.View>
+  );
+};
+
+const tabs = ["Messages", "Photos"];
+const Tabs = ({ scrollY }) => {
+  const stylez = useAnimatedStyle(() => {
+    return {
+      height: interpolate(
+        scrollY.value,
+        inputRange,
+        [_tabsHeight, _tabsHeightShrink],
+        Extrapolation.CLAMP,
+      ),
+      margin: interpolate(
+        scrollY.value,
+        inputRange,
+        [0, 20],
+        Extrapolation.CLAMP,
+      ),
+      borderRadius: interpolate(
+        scrollY.value,
+        inputRange,
+        [0, 20],
+        Extrapolation.CLAMP,
+      ),
+      marginTop: interpolate(
+        scrollY.value,
+        inputRange,
+        [0, -_tabsHeightShrink / 2],
+        Extrapolation.CLAMP,
+      ),
+    };
+  });
+  const navTextStyle = useAnimatedStyle(() => {
+    return {
+      color: interpolateColor(scrollY.value, inputRange, [
+        colors.tabText,
+        colors.headerText,
+      ]),
+      transform: [
+        {
+          translateY: interpolate(
+            scrollY.value,
+            inputRange,
+            [0, -_headerHeightShrink / 2],
+            Extrapolation.CLAMP,
+          ),
+        },
+        {
+          translateX: interpolate(
+            scrollY.value,
+            inputRange,
+            [0, 10],
+            Extrapolation.CLAMP,
+          ),
+        },
+      ],
+    };
+  });
+  const scrollStyles = useAnimatedStyle(() => {
+    return {
+      marginTop: interpolate(
+        scrollY.value,
+        inputRange,
+        [30, 0],
+        Extrapolation.CLAMP,
+      ),
+    };
+  });
+  return (
+    <Animated.View
+      style={[
+        {
+          backgroundColor: colors.tab,
+          justifyContent: "center",
+          paddingLeft: 50,
+        },
+        stylez,
+      ]}
+    >
+      <Animated.Text
+        style={[
+          {
+            color: colors.headerText,
+            fontSize: 20,
+            fontWeight: "700",
+            position: "absolute",
+            top: 30,
+            left: 50,
+          },
+          navTextStyle,
+        ]}
+      >
+        Mandy Flores, 24
+      </Animated.Text>
+      <Animated.ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={[{ flexGrow: 0 }, scrollStyles]}
+      >
+        {tabs.map((tab, index) => (
+          <View key={tab} style={{ marginRight: 40 }}>
+            <Text
+              style={{
+                color: colors.tabText,
+                fontWeight: "700",
+                fontSize: 16,
+              }}
+            >
+              {tab}
+            </Text>
+            {index === 0 && (
+              <View
+                style={{
+                  marginTop: 5,
+                  height: 2,
+                  backgroundColor: colors.tabText,
+                  width: "50%",
+                }}
               />
             )}
-          />
-          <View style={styles.pagination}>
-            {images.map((_: any, index: Key | null | undefined) => (
-              <View
-                key={index}
-                style={[
-                  styles.paginationDot,
-                  index === activeImageIndex && styles.paginationDotActive,
-                ]}
-              />
-            ))}
           </View>
-          <TouchableOpacity
-            style={[
-              styles.closeButton,
-              {
-                top: 10,
-                right: 10,
-              },
-            ]}
-            onPress={() => router.back()}
-          >
-            <Ionicons name="close" size={18} color="white" />
-          </TouchableOpacity>
-        </Animated.View>
-      </Animated.View>
+        ))}
+      </Animated.ScrollView>
+    </Animated.View>
+  );
+};
 
-      <Animated.View
-        entering={FadeIn.delay(150).duration(300)}
-        style={styles.content}
+export default function StickyTabs() {
+  const scrollY = useSharedValue(0);
+  const onScroll = useAnimatedScrollHandler((ev) => {
+    scrollY.value = ev.contentOffset.y;
+  });
+
+  return (
+    <View style={{ flex: 1 }}>
+      <Animated.ScrollView
+        style={[StyleSheet.absoluteFillObject]}
+        contentContainerStyle={{
+          padding: 20,
+          paddingTop: _headerHeight + _tabsHeight + 20,
+        }}
+        // snapToOffsets={[_headerHeightShrink + _tabsHeightShrink]}
+        // decelerationRate="fast"
+        onScroll={onScroll}
+        scrollEventThrottle={16}
       >
-        <Text style={styles.name}>{name}</Text>
-        <View style={styles.chatContainer}>
-          {/* Chat messages will go here */}
-          <Text>Messages will appear here</Text>
-        </View>
-      </Animated.View>
+        <ChatList />
+      </Animated.ScrollView>
+
+      <View style={{ position: "absolute" }}>
+        <Header scrollY={scrollY} />
+        <Tabs scrollY={scrollY} />
+      </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    flex: 1,
-    paddingTop: 20,
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 20,
-  },
-  chatContainer: {
-    flex: 1,
-    padding: 16,
-  },
-  closeButton: {
-    position: "absolute",
-    width: 24,
-    height: 24,
-    borderRadius: 18,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 1,
-  },
-  pagination: {
-    position: "absolute",
-    bottom: 20,
-    flexDirection: "row",
-    alignSelf: "center",
-    gap: 8,
-    backgroundColor: "rgba(0,0,0,0.3)",
-    padding: 6,
-    borderRadius: 12,
-  },
-  paginationDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: "rgba(255,255,255,0.4)",
-  },
-  paginationDotActive: {
-    backgroundColor: "#fff",
-    width: 18,
-  },
-});

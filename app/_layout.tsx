@@ -102,9 +102,7 @@ function RootLayoutNav() {
             <Stack.Screen
               name="chat-detail"
               options={{
-                presentation: "modal",
                 headerShown: false,
-                animation: "slide_from_bottom",
               }}
             />
           </Stack>
