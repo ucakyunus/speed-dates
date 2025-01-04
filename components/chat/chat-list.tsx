@@ -1,15 +1,8 @@
 /* eslint-disable react/display-name */
-import MaskedView from "@react-native-masked-view/masked-view";
-import { LinearGradient } from "expo-linear-gradient";
+// import MaskedView from "@react-native-masked-view/masked-view";
+// import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect } from "react";
-import {
-  ActivityIndicator,
-  Dimensions,
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Dimensions, FlatList, StyleSheet, Text, View } from "react-native";
 import Animated, {
   useAnimatedScrollHandler,
   useAnimatedStyle,
@@ -17,8 +10,9 @@ import Animated, {
 } from "react-native-reanimated";
 
 const { width, height } = Dimensions.get("window");
-const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
-const AnimatedMaskedView = Animated.createAnimatedComponent(MaskedView);
+
+// const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
+// const AnimatedMaskedView = Animated.createAnimatedComponent(MaskedView);
 
 const messages = [
   {
@@ -291,7 +285,7 @@ export default () => {
       scrollEventThrottle={1000 / 60} // ~16.66
       style={{ backgroundColor: "transparent" }}
     >
-      <AnimatedMaskedView
+      {/* <AnimatedMaskedView
         renderToHardwareTextureAndroid
         maskElement={
           <View
@@ -322,34 +316,34 @@ export default () => {
             )}
           </View>
         }
-      >
-        <View style={{ height: measures.height }}>
-          <FlatList
-            scrollEnabled={false}
-            data={entities}
-            keyExtractor={(item) => item.key}
-            style={[StyleSheet.absoluteFillObject, { zIndex: 1 }]}
-            removeClippedSubviews={true}
-            renderItem={({ item }) => {
-              return (
-                <View
-                  style={[
-                    styles.messageItem,
-                    {
-                      zIndex: item.mine ? -1 : 1, // only display the other messages above the gradient mask, we want to avoid gradient being applied to the other message other than mine.
-                      backgroundColor: item.mine ? "transparent" : "#E4E7EB", // remove the background for my messages because we're using the gradient mask
-                      alignSelf: item.mine ? "flex-end" : "flex-start",
-                    },
-                  ]}
-                >
-                  <Text style={{ color: item.mine ? "white" : "#111927" }}>
-                    {item.text}
-                  </Text>
-                </View>
-              );
-            }}
-          />
-          <AnimatedLinearGradient
+      > */}
+      <View style={{ height: measures.height }}>
+        <FlatList
+          scrollEnabled={false}
+          data={entities}
+          keyExtractor={(item) => item.key}
+          style={[StyleSheet.absoluteFillObject, { zIndex: 1 }]}
+          removeClippedSubviews={true}
+          renderItem={({ item }) => {
+            return (
+              <View
+                style={[
+                  styles.messageItem,
+                  {
+                    zIndex: item.mine ? -1 : 1, // only display the other messages above the gradient mask, we want to avoid gradient being applied to the other message other than mine.
+                    backgroundColor: item.mine ? "transparent" : "#E4E7EB", // remove the background for my messages because we're using the gradient mask
+                    alignSelf: item.mine ? "flex-end" : "flex-start",
+                  },
+                ]}
+              >
+                <Text style={{ color: item.mine ? "white" : "#111927" }}>
+                  {item.text}
+                </Text>
+              </View>
+            );
+          }}
+        />
+        {/* <AnimatedLinearGradient
             style={[
               {
                 height,
@@ -365,9 +359,9 @@ export default () => {
               gradientStyle,
             ]}
             colors={["#FD84AA", "#A38CF9", "#09E0FF"]}
-          />
-        </View>
-      </AnimatedMaskedView>
+          /> */}
+      </View>
+      {/* </AnimatedMaskedView> */}
     </Animated.ScrollView>
   );
 };
