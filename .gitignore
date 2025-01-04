@@ -27,8 +27,10 @@ DerivedData
 *.xcuserstate
 ios/.xcode.env.local
 
-# Ignore the entire ios folder
-ios/
+# # Ignore the entire ios folder
+# ios/
+# # Ignore the entire android folder
+# android/
 
 
 # Android/IntelliJ

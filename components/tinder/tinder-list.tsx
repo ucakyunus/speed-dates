@@ -50,9 +50,6 @@ export function TinderList() {
       <ViceTinder
         data={tinderData}
         style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
-        onEndReached={() => {
-          console.log("Fetching more data");
-        }}
         onChange={(index) => {
           setCurrentIndex(index);
         }}

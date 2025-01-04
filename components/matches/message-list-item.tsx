@@ -12,12 +12,13 @@ import Colors from "@/constants/Colors";
 
 type MessageListItemProps = {
   item: {
+    id: string;
     name: string;
     images: string[];
     date: Date;
     message: string;
   };
-  onDelete: () => void;
+  onDelete: (id: string) => void;
 };
 
 export function MessageListItem({ item, onDelete }: MessageListItemProps) {
@@ -25,7 +26,9 @@ export function MessageListItem({ item, onDelete }: MessageListItemProps) {
   const router = useRouter();
 
   const handleDelete = () => {
-    onDelete();
+    // add item to deleted items
+    onDelete(item.id);
+
     Toast.show({
       type: "success",
       text1: "Success",
@@ -34,6 +37,7 @@ export function MessageListItem({ item, onDelete }: MessageListItemProps) {
   };
 
   const renderUnderlayLeft = ({ percentOpen }: UnderlayParams<typeof item>) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const animStyle = useAnimatedStyle(
       () => ({
         opacity: percentOpen.value,
@@ -66,7 +70,7 @@ export function MessageListItem({ item, onDelete }: MessageListItemProps) {
 
   return (
     <SwipeableItem
-      key={item.name}
+      key={item.id}
       item={item}
       renderUnderlayLeft={renderUnderlayLeft}
       snapPointsLeft={[80]}

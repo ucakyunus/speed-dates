@@ -56,7 +56,7 @@ export const TabBar = ({
         });
       }
     }
-  }, [currentRoute]);
+  }, [buttonWidth, currentRoute, state.routes, tabPositionX]);
 
   return (
     <View onLayout={onTabbarLayout} style={styles.tabBar}>

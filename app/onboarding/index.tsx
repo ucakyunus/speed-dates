@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import { useNavigation, useRouter } from "expo-router";
 
-import { Onboarding } from "@/components/Onboarding";
+import { Onboarding } from "@/components/onboarding";
 import { getOnboardingState } from "@/lib/mmkvStorage";
 
 export default function OnboardingScreen() {

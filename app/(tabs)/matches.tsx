@@ -4,7 +4,7 @@ import { StyleSheet } from "react-native";
 
 import { MessageList } from "@/components/matches/message-list";
 import { View } from "@/components/Themed";
-import { getMatchedItems } from "@/lib/mmkvStorage";
+import { getMatchedItems, removeMatchedItem } from "@/lib/mmkvStorage";
 
 type MatchedItem = {
   id: string;
@@ -21,25 +21,27 @@ export default function MatchesScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      // clearMatchedItems();
-      // Get matched items when screen comes into focus
       const items = getMatchedItems();
       setMatchedItems(items);
     }, []),
   );
 
-  // Transform matched items to match TelegramStories data structure
   const transformedData = matchedItems.map((item) => ({
-    key: item.id,
+    id: item.id,
     name: item.name,
     images: item.images,
     date: new Date(),
     message: item.bio,
   }));
 
+  const handleDelete = (id: string) => {
+    setMatchedItems((prev) => prev.filter((message) => message.id !== id));
+    removeMatchedItem(id);
+  };
+
   return (
     <View style={styles.container}>
-      <MessageList data={transformedData} />
+      <MessageList data={transformedData} onDelete={handleDelete} />
     </View>
   );
 }

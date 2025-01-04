@@ -13,17 +13,12 @@ import * as SplashScreen from "expo-splash-screen";
 import { getOnboardingState, ONBOARDING_KEY, storage } from "@/lib/mmkvStorage";
 import Toast from "react-native-toast-message";
 
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from "expo-router";
+export { ErrorBoundary } from "expo-router";
 
 export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
   initialRouteName: "(tabs)",
 };
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -32,7 +27,6 @@ export default function RootLayout() {
     ...FontAwesome.font,
   });
 
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;
   }, [error]);
@@ -56,18 +50,15 @@ function RootLayoutNav() {
   const insets = useSafeAreaInsets();
 
   useEffect(() => {
-    // Check the current onboarding state at the start
     const currentState = getOnboardingState();
     setIsOnboarded(currentState ?? null);
 
-    // Navigate based on the current onboarding state
     if (currentState === true) {
-      router.replace("/"); // Replace with main tab route
+      router.replace("/");
     } else {
-      router.replace("/onboarding"); // Replace with onboarding route
+      router.replace("/onboarding");
     }
 
-    // Listen for changes/removals of the `speeddates-onboarding` key
     const listener = storage.addOnValueChangedListener((key: string) => {
       if (key === ONBOARDING_KEY) {
         const newState = getOnboardingState();
@@ -75,15 +66,14 @@ function RootLayoutNav() {
         if (newState !== isOnboarded) {
           setIsOnboarded(newState ?? null);
           if (newState === true) {
-            router.replace("/"); // Navigate to main page
+            router.replace("/");
           } else {
-            router.replace("/onboarding"); // Navigate to onboarding page
+            router.replace("/onboarding");
           }
         }
       }
     });
 
-    // Cleanup listener when component unmounts
     return () => {
       listener.remove();
     };
@@ -95,10 +85,6 @@ function RootLayoutNav() {
         <ThemeProvider value={DarkTheme}>
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen
-              name="modal"
-              options={{ presentation: "modal", headerShown: false }}
-            />
             <Stack.Screen
               name="chat-detail"
               options={{

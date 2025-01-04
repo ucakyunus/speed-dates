@@ -3,53 +3,62 @@ import { MMKV } from "react-native-mmkv";
 // Create a new MMKV storage instance
 export const storage = new MMKV();
 
-const ONBOARDING_KEY = "speeddates-onboarding";
-const MATCHED_ITEMS_KEY = "speeddates-matched-items";
+export const ONBOARDING_KEY = "onboarding_completed";
+export const USER_DATA_KEY = "user_data";
+export const MATCHED_ITEMS_KEY = "speeddates-matched-items";
 
-const setOnboardingState = (state: boolean) => {
-  storage.set(ONBOARDING_KEY, state);
+export const setOnboardingState = (value: boolean) => {
+  storage.set(ONBOARDING_KEY, value);
 };
 
-const getOnboardingState = () => {
-  return storage.contains(ONBOARDING_KEY)
-    ? storage.getBoolean(ONBOARDING_KEY)
-    : null;
+export const getOnboardingState = () => {
+  return storage.getBoolean(ONBOARDING_KEY) || false;
 };
 
-const removeOnboardingState = () => {
+export const removeOnboardingState = () => {
   storage.delete(ONBOARDING_KEY);
 };
 
-const saveMatchedItem = (item: any) => {
+export type UserData = {
+  name: string;
+  preference: string;
+  zodiac: string;
+  interests: string[];
+  profileImage?: string;
+};
+
+export const setUserData = (data: UserData) => {
+  storage.set(USER_DATA_KEY, JSON.stringify(data));
+};
+
+export const getUserData = (): UserData | null => {
+  const data = storage.getString(USER_DATA_KEY);
+  return data ? JSON.parse(data) : null;
+};
+
+export const removeUserData = () => {
+  storage.delete(USER_DATA_KEY);
+};
+
+export const saveMatchedItem = (item: any) => {
   const existingMatches = getMatchedItems();
   const newMatches = [...existingMatches, item];
   storage.set(MATCHED_ITEMS_KEY, JSON.stringify(newMatches));
 };
 
-const getMatchedItems = () => {
+export const getMatchedItems = () => {
   if (!storage.contains(MATCHED_ITEMS_KEY)) {
     return [];
   }
   return JSON.parse(storage.getString(MATCHED_ITEMS_KEY) || "[]");
 };
 
-const clearMatchedItems = () => {
+export const clearMatchedItems = () => {
   storage.delete(MATCHED_ITEMS_KEY);
 };
 
 export function removeMatchedItem(id: string) {
   const items = getMatchedItems();
-  const filteredItems = items.filter((item: { id: string; }) => item.id !== id);
+  const filteredItems = items.filter((item: { id: string }) => item.id !== id);
   storage.set(MATCHED_ITEMS_KEY, JSON.stringify(filteredItems));
 }
-
-export {
-  clearMatchedItems,
-  getMatchedItems,
-  getOnboardingState,
-  MATCHED_ITEMS_KEY,
-  ONBOARDING_KEY,
-  removeOnboardingState,
-  saveMatchedItem,
-  setOnboardingState,
-};

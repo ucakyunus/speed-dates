@@ -1,33 +1,30 @@
 import { MessageListItem } from "@/components/matches/message-list-item";
-import { useState } from "react";
 import { FlatList } from "react-native";
 
 type Message = {
-  key: string;
+  id: string;
   name: string;
   images: string[];
   date: Date;
   message: string;
 };
 
-type MessageListProps = { data: Message[] };
+type MessageListProps = {
+  data: Message[];
+  onDelete: (id: string) => void;
+};
 
-export function MessageList({ data: initialData }: MessageListProps) {
-  const [messages, setMessages] = useState<Message[]>(initialData);
-
-  const handleDelete = (key: string) => {
-    setMessages((prev) => prev.filter((message) => message.key !== key));
-  };
-
+export function MessageList({ data, onDelete }: MessageListProps) {
   return (
     <FlatList
-      data={initialData}
+      data={data}
       style={{ marginTop: 15 }}
-      renderItem={({ item }: { item: Message }) => {
+      renderItem={({ item, index }: { item: Message; index: number }) => {
         return (
           <MessageListItem
+            key={`${item.id}-${index}`}
             item={item}
-            onDelete={() => handleDelete(item.key)}
+            onDelete={onDelete}
           />
         );
       }}
