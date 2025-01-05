@@ -22,7 +22,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.ucakyunus.speeddates"
+      "package": "com.ucakyunus.speeddates",
+      "permissions": ["android.permission.RECORD_AUDIO"]
     },
     "web": {
       "bundler": "metro",
@@ -56,6 +57,6 @@
         "projectId": "77a682e9-7582-4dcc-b450-09b26b9c2eba"
       }
     },
-    "owner": "ucakyunus"
+    "owner": "speed-dates"
   }
 }
