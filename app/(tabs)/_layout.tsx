@@ -1,6 +1,10 @@
 import { TabBar } from "@/components/tab-bar";
 import Colors from "@/constants/Colors";
-import { removeOnboardingState } from "@/lib/mmkvStorage";
+import {
+  clearMatchedItems,
+  removeOnboardingState,
+  removeUserData,
+} from "@/lib/mmkvStorage";
 import { Ionicons } from "@expo/vector-icons";
 import { router, Tabs, usePathname } from "expo-router";
 import { Alert, TouchableOpacity } from "react-native";
@@ -19,6 +23,8 @@ export default function TabLayout() {
         style: "destructive",
         onPress: () => {
           removeOnboardingState();
+          removeUserData();
+          clearMatchedItems();
           router.replace("/onboarding");
         },
       },

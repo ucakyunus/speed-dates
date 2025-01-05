@@ -88,7 +88,17 @@ function RootLayoutNav() {
             <Stack.Screen
               name="chat-detail"
               options={{
+                presentation: "modal",
                 headerShown: false,
+                animation: "slide_from_bottom",
+              }}
+            />
+            <Stack.Screen
+              name="video-simulator"
+              options={{
+                presentation: "fullScreenModal",
+                headerShown: false,
+                animation: "slide_from_bottom",
               }}
             />
           </Stack>
